@@ -62,6 +62,7 @@ export class Actor extends Agent {
             run: JSON.stringify({
                 time: new Date().toISOString(),
                 actorType: this.actorType,
+                id: this.id,
                 iteration: this.iteration,
                 address: this.account.address,
             }),
@@ -94,14 +95,14 @@ export class Actor extends Agent {
         let newSnapshot;
         try {
             currentSnapshot = await context.snapshotProvider.snapshot();
-            this.log("Executing action");
+            this.log("Executing action", action);
             actionParams = await action.execute(context, this, currentSnapshot);
             newSnapshot = await context.snapshotProvider.snapshot();
-            this.log("Validating action", actionParams);
+            this.log("Validating action", action, actionParams);
             await action.validate(context, this, currentSnapshot, newSnapshot, actionParams);
         }
         catch (ex) {
-            this.log(ex, currentSnapshot, actionParams, newSnapshot);
+            this.log(ex, action, currentSnapshot, actionParams, newSnapshot);
             throw ex;
         }
     }
