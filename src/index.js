@@ -1,7 +1,15 @@
-import { Agent } from "flocc";
-export class PRNG {
-    state;
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Runner = exports.Actor = exports.Action = exports.PRNG = void 0;
+const flocc_1 = require("flocc");
+class PRNG {
     constructor(seed) {
+        Object.defineProperty(this, "state", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: void 0
+        });
         this.state = 1; // Default nonzero state
         this.initialize(seed);
     }
@@ -27,9 +35,15 @@ export class PRNG {
         return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
     }
 }
-export class Action {
-    name;
+exports.PRNG = PRNG;
+class Action {
     constructor(name) {
+        Object.defineProperty(this, "name", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: void 0
+        });
         this.name = name;
     }
     log(...args) {
@@ -42,13 +56,34 @@ export class Action {
         }));
     }
 }
-export class Actor extends Agent {
-    actorType;
-    account;
-    iteration = 0;
-    actions;
+exports.Action = Action;
+class Actor extends flocc_1.Agent {
     constructor(actorType, account, contracts, actions) {
         super();
+        Object.defineProperty(this, "actorType", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: void 0
+        });
+        Object.defineProperty(this, "account", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: void 0
+        });
+        Object.defineProperty(this, "iteration", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: 0
+        });
+        Object.defineProperty(this, "actions", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: void 0
+        });
         this.actorType = actorType;
         this.account = account;
         this.actions = actions;
@@ -107,14 +142,45 @@ export class Actor extends Agent {
         }
     }
 }
-export class Runner {
-    actors;
-    randomSeed;
-    iterations;
-    options;
-    prng;
-    snapshotProvider;
+exports.Actor = Actor;
+class Runner {
     constructor(actors, snapshotProvider, options) {
+        Object.defineProperty(this, "actors", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: void 0
+        });
+        Object.defineProperty(this, "randomSeed", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: void 0
+        });
+        Object.defineProperty(this, "iterations", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: void 0
+        });
+        Object.defineProperty(this, "options", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: void 0
+        });
+        Object.defineProperty(this, "prng", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: void 0
+        });
+        Object.defineProperty(this, "snapshotProvider", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: void 0
+        });
         this.actors = actors;
         this.iterations = options.iterations || 100;
         this.randomSeed = options.randomSeed || "0";
@@ -138,3 +204,4 @@ export class Runner {
         }
     }
 }
+exports.Runner = Runner;
