@@ -38,13 +38,13 @@ export class PRNG {
   
 
 export interface Account {
-   type: "key" | "contract",
-   address: string,
-   value: any // contract code or private key
+   readonly type: "key" | "contract",
+   readonly address: string,
+   readonly value: any // contract code or private key
 }
 
 export abstract class Action {
-    name: string;
+    readonly name: string;
     constructor(name: string) {
         this.name = name;
     }
@@ -62,17 +62,17 @@ export abstract class Action {
 }
 
 export interface ActorConfig {
-    name: string;
-    account: Account;
-    actions: { action: Action; probability: number }[];
+    readonly name: string;
+    readonly account: Account;
+    readonly actions: { action: Action; probability: number }[];
 }
 
 
 export class Actor extends Agent {
-    actorType: string;
-    account: Account;
-    iteration: number= 0;
-    actions: { action: Action; probability?: number }[];
+    readonly actorType: string;
+    readonly account: Account;
+    private iteration: number= 0;
+    private actions: { action: Action; probability?: number }[];
     constructor(actorType: string, account: Account, contracts: any[], actions: { action: Action; probability?: number }[]) {
         super();
         this.actorType = actorType;
@@ -140,9 +140,9 @@ export class Actor extends Agent {
 }
 
 export interface Web3RunnerOptions {
-    iterations: number;
-    shuffleAgents?: boolean;
-    randomSeed?: string;
+    readonly iterations: number;
+    readonly shuffleAgents?: boolean;
+    readonly randomSeed?: string;
 }
 
 export interface SnapshotProvider {
@@ -150,18 +150,18 @@ export interface SnapshotProvider {
 }
 
 export interface RunContext {
-    snapshotProvider: SnapshotProvider;
-    prng: PRNG;
-    iter: number;
+    readonly snapshotProvider: SnapshotProvider;
+    readonly prng: PRNG;
+    readonly iter: number;
 }
 
 export class Runner {
     actors: Actor[];
-    randomSeed: string;
-    iterations: number;
-    options: any;
-    prng: PRNG;
-    snapshotProvider: SnapshotProvider;
+    readonly randomSeed: string;
+    readonly iterations: number;
+    readonly options: any;
+    readonly prng: PRNG;
+    readonly snapshotProvider: SnapshotProvider;
     constructor(actors: Actor[], snapshotProvider: SnapshotProvider, options: Web3RunnerOptions) {
         this.actors = actors;
         this.iterations = options.iterations || 100;
