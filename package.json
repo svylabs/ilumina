@@ -1,14 +1,14 @@
 {
     "name": "@svylabs/flocc-ext",
-    "version": "0.0.7",
+    "version": "0.0.8",
     "description": "An agent based simulation / testing library built around the flocc library",
     "main": "index.ts",
     "type": "module",
     "bin": {
-        "scaffold": "ts-node ./bin/scaffold.ts" 
+        "scaffold": "node ./bin/scaffold.js" 
     },
     "scripts": {
-        "build": "tsc && tsc ./bin/scaffold.ts",
+        "build": "tsc && tsc ./bin/scaffold.ts --module CommonJS --outDir ./bin",
         "test": "jest --config jest.config.ts"
     },
     "repository": {
