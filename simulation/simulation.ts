@@ -49,7 +49,7 @@ async function main() {
     const numActors = 10;
     const actors: Actor[] = [];
     for (let i = 0; i < numActors; i++) {
-        const account = {
+        const account: Account = {
            address: addrs[i].address,
            type: "key",
            value: addrs[i]

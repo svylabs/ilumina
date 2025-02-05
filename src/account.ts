@@ -3,4 +3,3 @@ export interface Account {
     readonly address: string,
     readonly value: any // contract code or private key
  }
- 
