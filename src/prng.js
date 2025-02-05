@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.PRNG = void 0;
-class PRNG {
+export class PRNG {
     constructor(seed) {
         Object.defineProperty(this, "state", {
             enumerable: true,
@@ -34,4 +31,3 @@ class PRNG {
         return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
     }
 }
-exports.PRNG = PRNG;

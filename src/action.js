@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Action = void 0;
-class Action {
+export class Action {
     constructor(name) {
         Object.defineProperty(this, "name", {
             enumerable: true,
@@ -21,4 +18,3 @@ class Action {
         }));
     }
 }
-exports.Action = Action;
