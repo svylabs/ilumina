@@ -7,7 +7,7 @@
       "skipLibCheck": true,
       "declaration": true,
       "declarationMap": true,
-      "emitDeclarationOnly": true,
+      "emitDeclarationOnly": false,
       "esModuleInterop": true,
       "allowSyntheticDefaultImports": true,
       "strict": true,
@@ -16,9 +16,7 @@
       "moduleResolution": "Node",
       "noImplicitAny": true,
       "resolveJsonModule": true,
-      "isolatedModules": true,
       "noEmit": false,
-      "jsx": "react-jsx",
       "baseUrl": "./src",
       "paths": {
         "~/*": ["./*"]

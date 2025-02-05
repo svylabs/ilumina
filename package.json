@@ -1,19 +1,25 @@
 {
     "name": "@svylabs/flocc-ext",
-    "version": "0.0.10",
+    "version": "0.0.11",
     "description": "An agent based simulation / testing library built around the flocc library",
-    "main": "src/index.ts",
+    "main": "src/index.js",
     "type": "module",
     "types": "src/index.d.ts",
     "files": [
         "src",
         "bin"
     ],
+    "exports": {
+        ".": {
+            "import": "./src/index.js",
+            "types": "./src/index.d.ts"
+        }
+    },
     "bin": {
         "scaffold": "node ./bin/scaffold.cjs" 
     },
     "scripts": {
-        "build": "tsc && tsc ./bin/scaffold.ts --module CommonJS --outDir ./bin && mv ./bin/scaffold.js ./bin/scaffold.cjs",
+        "build": "tsc && tsc ./bin/scaffold.ts --module CommonJS --outDir ./bin && mv ./bin/scaffold.js ./bin/scaffold.cjs && chmod +x ./bin/scaffold.cjs",
         "test": "jest --config jest.config.ts"
     },
     "repository": {
@@ -21,7 +27,7 @@
         "url": "git+https://github.com/svylabs/flocc-ext.git"
     },
     "keywords": [],
-    "author": "Your Name",
+    "author": "Sridhar<sg@svylabs.com>",
     "license": "ISC",
     "bugs": {
         "url": "https://github.com/svylabs/flocc-ext/issues"
