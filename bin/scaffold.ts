@@ -13,7 +13,8 @@ program
     const testDir = path.resolve(process.cwd(), "simulation");
     const testFile = path.join(testDir, `simulation.${options.language}`);
 
-    const template = `import { PRNG, Actor, Account, Action, Runner, Web3RunnerOptions, SnapshotProvider, RunContext, Agent, Environment } from "@svylabs/flocc-ext";
+    const template = `#!/usr/bin/env node
+import { PRNG, Actor, Account, Action, Runner, Web3RunnerOptions, SnapshotProvider, RunContext, Agent, Environment } from "@svylabs/flocc-ext";
 import { ethers } from "hardhat";
 
 async function deployContracts() {
@@ -24,7 +25,7 @@ async function deployContracts() {
     return contracts;
 }
 
-// Define Actions here
+// Define your custom Actions here
 class BorrowAction extends Action {
     private contracts: any;
     constructor(contracts: any) {
