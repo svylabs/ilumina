@@ -24,7 +24,7 @@
         "~/*": ["./*"]
       }
     },
-    "include": ["src/**/*"],
+    "include": ["src/**/*", "bin/**/*"],
     "exclude": ["node_modules", "**/*.spec.ts"],
     "types": ["jest"]
   }
