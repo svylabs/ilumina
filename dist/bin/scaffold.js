@@ -11,8 +11,10 @@ program
     const testDir = path.resolve(process.cwd(), "simulation");
     const testFile = path.join(testDir, `simulation.${options.language}`);
     const template = `#!/usr/bin/env node
-import { PRNG, Actor, Account, Action, Runner, Web3RunnerOptions, SnapshotProvider, RunContext, Agent, Environment } from "@svylabs/flocc-ext";
-import { ethers } from "hardhat";
+import { PRNG, Actor, Action, Runner, Agent, Environment } from "@svylabs/flocc-ext";
+import type { Account, Web3RunnerOptions, SnapshotProvider, RunContext } from "@svylabs/flocc-ext";
+import pkg from 'hardhat';
+const { ethers } = pkg;
 
 async function deployContracts() {
     const [deployer] = await ethers.getSigners();

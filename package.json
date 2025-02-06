@@ -1,6 +1,6 @@
 {
     "name": "@svylabs/flocc-ext",
-    "version": "0.0.19",
+    "version": "0.0.20",
     "description": "An agent based simulation / testing library built around the flocc library",
     "main": "dist/src/index.js",
     "type": "module",
