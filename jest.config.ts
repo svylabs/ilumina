@@ -1,20 +1,11 @@
-const config = {
-  preset: "ts-jest/presets/default-esm",
-  testEnvironment: "node",
-  transform: {
-    "^.+\\.tsx?$": ["ts-jest", { useESM: true }] // ✅ Correct transformation syntax
-  },
+import type { Config } from "jest";
+
+const config: Config = {
+  preset: "ts-jest/presets/default-esm",  // ✅ Ensures Jest uses ESM for TypeScript
   extensionsToTreatAsEsm: [".ts"],
-  globals: {
-    "ts-jest": {
-      useESM: true, // Enable ESM mode
-    }
-  },
-  moduleNameMapper: {
-    "^(\\.{1,2}/.*)\\.js$": "$1" // ✅ Fix path resolution for ES Modules
-  },
-  transformIgnorePatterns: ["node_modules/(?!(flocc)/)"], // ✅ Allow transpiling specific dependencies if needed
-  verbose: true, // Enable detailed test logs
+  moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"],
+  transform: {},
+  transformIgnorePatterns: ["/node_modules/"], // ✅ Ensure node_modules are not transformed
 };
 
 export default config;

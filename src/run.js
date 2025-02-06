@@ -1,8 +1,5 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Runner = void 0;
-const prng_1 = require("./prng");
-class Runner {
+import { PRNG } from "./prng";
+export class Runner {
     constructor(actors, snapshotProvider, options) {
         Object.defineProperty(this, "actors", {
             enumerable: true,
@@ -43,7 +40,7 @@ class Runner {
         this.actors = actors;
         this.iterations = options.iterations || 100;
         this.randomSeed = options.randomSeed || "0";
-        this.prng = new prng_1.PRNG(options.randomSeed || "0");
+        this.prng = new PRNG(options.randomSeed || "0");
         this.snapshotProvider = snapshotProvider;
         this.options = options;
     }
@@ -63,4 +60,3 @@ class Runner {
         }
     }
 }
-exports.Runner = Runner;

@@ -1,8 +1,5 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Actor = void 0;
-const flocc_1 = require("flocc");
-class Actor extends flocc_1.Agent {
+import { Agent } from "flocc";
+export class Actor extends Agent {
     constructor(actorType, account, contracts, actions) {
         super();
         Object.defineProperty(this, "actorType", {
@@ -87,4 +84,3 @@ class Actor extends flocc_1.Agent {
         }
     }
 }
-exports.Actor = Actor;
