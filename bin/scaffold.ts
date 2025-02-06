@@ -100,12 +100,16 @@ async function main() {
 }
 
 console.log(process.argv);
-describe("Simulation", function() {
-    it("Should run the simulation without errors", async function() {
-        this.timeout(1000000);
-        await main();
-    });
+main()
+.then(() => {
+    console.log("Simulation completed successfully");
+    process.exit(0)
+})
+.catch(error => {
+    console.error(error);
+    process.exit(1);
 });
+    
     
     `
 
