@@ -1,6 +1,6 @@
 {
     "name": "@svylabs/flocc-ext",
-    "version": "0.0.14",
+    "version": "0.0.15",
     "description": "An agent based simulation / testing library built around the flocc library",
     "main": "src/index.js",
     "type": "module",
@@ -9,12 +9,6 @@
         "src",
         "bin"
     ],
-    "exports": {
-        ".": {
-            "import": "./src/index.js",
-            "types": "./src/index.d.ts"
-        }
-    },
     "bin": {
         "scaffold": "./bin/scaffold.cjs" 
     },

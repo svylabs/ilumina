@@ -1,5 +1,5 @@
 import { describe, test, expect } from "@jest/globals";
-import { PRNG, Actor, Account, Action, Runner, Web3RunnerOptions, SnapshotProvider, RunContext } from "../src/index.js"; // Replace with actual file name
+import { PRNG, Actor, Account, Action, Runner, Web3RunnerOptions, SnapshotProvider, RunContext } from "../src/index"; // Replace with actual file name
 
 // ✅ 1. Mock Snapshot Provider
 class MockSnapshotProvider implements SnapshotProvider {
