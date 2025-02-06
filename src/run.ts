@@ -1,5 +1,5 @@
-import { Actor } from "./actor";
-import { PRNG } from "./prng";
+import { Actor } from "./actor.js";
+import { PRNG } from "./prng.js";
 
 export interface Web3RunnerOptions {
     readonly iterations: number;

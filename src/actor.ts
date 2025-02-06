@@ -1,7 +1,7 @@
 import { Agent } from "flocc";
-import { RunContext } from "./run";
-import { Account } from "./account";
-import { Action } from "./action";
+import { RunContext } from "./run.js";
+import { Account } from "./account.js";
+import { Action } from "./action.js";
 
   
 

@@ -1,5 +1,5 @@
-import { RunContext } from './run';
-import { Actor } from './actor';
+import { RunContext } from './run.js';
+import { Actor } from './actor.js';
 
 export abstract class Action {
     readonly name: string;
