@@ -1,5 +1,5 @@
 {
-    "name": "@svylabs/flocc-ext",
+    "name": "@svylabs/ilumina",
     "version": "0.1.0",
     "description": "An agent based simulation / testing library built around the flocc library",
     "main": "dist/src/index.js",
@@ -23,15 +23,15 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/svylabs/flocc-ext.git"
+        "url": "git+https://github.com/svylabs/ilumina.git"
     },
     "keywords": [],
     "author": "Sridhar<sg@svylabs.com>",
     "license": "ISC",
     "bugs": {
-        "url": "https://github.com/svylabs/flocc-ext/issues"
+        "url": "https://github.com/svylabs/ilumina/issues"
     },
-    "homepage": "https://github.com/svylabs/flocc-ext#readme",
+    "homepage": "https://github.com/svylabs/ilumina#readme",
     "dependencies": {
         "flocc": "^0.5.21",
         "typescript": "^5.7.3"

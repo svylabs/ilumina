@@ -4,15 +4,15 @@ import * as path from "path";
 import * as fse from "fs-extra";
 const program = new Command();
 program
-    .version("1.0.0")
+    .version("0.1.0")
     .option("-f, --framework <framework>", "Development framework (hardhat, foundry)", "hardhat")
     .option("-l, --language <language>", "Programming language (ts, js)", "ts")
     .action((options) => {
     const testDir = path.resolve(process.cwd(), "simulation");
     const testFile = path.join(testDir, `simulation.${options.language}`);
     const template = `#!/usr/bin/env node
-import { PRNG, Actor, Action, Runner, Agent, Environment } from "@svylabs/flocc-ext";
-import type { Account, Web3RunnerOptions, SnapshotProvider, RunContext } from "@svylabs/flocc-ext";
+import { PRNG, Actor, Action, Runner, Agent, Environment } from "@svylabs/ilumina";
+import type { Account, Web3RunnerOptions, SnapshotProvider, RunContext } from "@svylabs/ilumina";
 import {ethers} from 'hardhat';
 
 async function deployContracts() {
