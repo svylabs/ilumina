@@ -1,6 +1,6 @@
 {
     "name": "@svylabs/ilumina",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "description": "An agent based simulation / testing library built around the flocc library",
     "main": "dist/src/index.js",
     "type": "module",
