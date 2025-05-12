@@ -46,22 +46,25 @@ export class Actor extends Agent {
             }
         }
     }
+    getIdentifier() {
+        // Customize this method to return the desired identifier
+        return this.account.address || this.id || 'unknown';
+    }
     async executeAction(context, action) {
         let actionParams;
         let currentSnapshot;
         let newSnapshot;
         try {
-            currentSnapshot = await context.snapshotProvider.snapshot({
-                actorId: this.id,
-                address: this.account.address,
-                // Add any additional parameters if needed
-            });
+            // Use the identifier in the snapshot call
+            const identifier = this.getIdentifier();
+            // currentSnapshot = await context.snapshotProvider.snapshot({
+            //     actorId: this.id,
+            //     address: this.account.address,
+            // });
+            currentSnapshot = await context.snapshotProvider.snapshot(identifier);
             this.log("Executing action", action);
             actionParams = await action.execute(context, this, currentSnapshot);
-            newSnapshot = await context.snapshotProvider.snapshot({
-                actorId: this.id,
-                address: this.account.address,
-            });
+            newSnapshot = await context.snapshotProvider.snapshot(identifier);
             this.log("Validating action", action, actionParams);
             await action.validate(context, this, currentSnapshot, newSnapshot, actionParams);
         }
