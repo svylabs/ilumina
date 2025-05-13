@@ -3,21 +3,18 @@ import { RunContext } from "./run.js";
 import { Account } from "./account.js";
 import { Action } from "./action.js";
 
-  
-
 export interface ActorConfig {
     readonly name: string;
     readonly account: Account;
     readonly actions: { action: Action; probability: number }[];
 }
 
-
-
 export class Actor extends Agent {
     readonly actorType: string;
     readonly account: Account;
-    private iteration: number= 0;
+    private iteration: number = 0;
     private actions: { action: Action; probability?: number }[];
+
     constructor(actorType: string, account: Account, contracts: any[], actions: { action: Action; probability?: number }[]) {
         super();
         this.actorType = actorType;
@@ -50,17 +47,17 @@ export class Actor extends Agent {
                 acc[0] += action.probability || 0; // Sum of probabilities
                 acc[1] += action.probability ? 0 : 1; // Count of actions without probability
                 return acc;
-              }
-              , [0, 0]
+            },
+            [0, 0]
         );
         for (let action of this.actions) {
             if (action.probability) {
                 if (context.prng.next() < action.probability / result[0]) {
-                    this.executeAction(context, action.action);
+                    await this.executeAction(context, action.action);
                 }
             } else {
                 if (context.prng.next() < 1 / result[1]) {
-                    this.executeAction(context, action.action);
+                    await this.executeAction(context, action.action);
                 }
             }
         }
