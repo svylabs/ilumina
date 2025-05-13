@@ -15,6 +15,11 @@ export abstract class Action {
             args: JSON.stringify(args)
         }));
     }
-    abstract execute(context: RunContext, actor: Actor, currentSnapshot: any): Promise<any>;
+
+    // Abstract method to generate action parameters
+    abstract generateActionParams(context: RunContext, actor: Actor, currentSnapshot: any): Promise<any>;
+
+    abstract execute(context: RunContext, actor: Actor, currentSnapshot: any, actionParams: any): Promise<any>;
+
     abstract validate(context: RunContext, actor: Actor, previousSnapshot: any, newSnapshot: any, actionParams: any): Promise<boolean>;
 }

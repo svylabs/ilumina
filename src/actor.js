@@ -5,15 +5,15 @@ export class Actor extends Agent {
     account;
     iteration = 0;
     actions;
-    identifiers; // Map to hold identifiers
+    identifiers; // JSON object to hold identifiers
 
-    constructor(actorType, account, actions, identifiers = new Map()) {
+    constructor(actorType, account, actions, identifiers = {}) {
         super();
         this.actorType = actorType;
         this.account = account;
         this.actions = actions;
         this.identifiers = identifiers; // Initialize identifiers
-        this.identifiers.set(account.address, account.address); // Set initial identifier
+        this.identifiers["accountAddress"] = account.address; // Set initial identifier
     }
 
     async step(context) {
@@ -59,35 +59,25 @@ export class Actor extends Agent {
         let currentSnapshot;
         let newSnapshot;
         try {
-            // Generate action parameters and update identifiers
-            [actionParams, this.identifiers] = this.generateActionParams(action, this.account.address, this.identifiers);
-            
-            // Create snapshots based on updated identifiers
-            currentSnapshot = await context.snapshotProvider.snapshot(Object.fromEntries(this.identifiers));
+            // Take the current snapshot
+            currentSnapshot = await context.snapshotProvider.snapshot(this.identifiers);
+
+            // Generate action parameters using the action
+            actionParams = await action.generateActionParams(context, this, currentSnapshot);
+
+            // Execute the action
             this.log("Executing action", action);
-            actionParams = await action.execute(context, this, currentSnapshot);
-            newSnapshot = await context.snapshotProvider.snapshot(Object.fromEntries(this.identifiers));
+            await action.execute(context, this, currentSnapshot, actionParams);
+
+            // Take the new snapshot
+            newSnapshot = await context.snapshotProvider.snapshot(this.identifiers);
+
+            // Validate the action
             this.log("Validating action", action, actionParams);
             await action.validate(context, this, currentSnapshot, newSnapshot, actionParams);
         } catch (ex) {
             this.log(ex, action, currentSnapshot, actionParams, newSnapshot);
             throw ex;
         }
-    }
-
-    generateActionParams(action, accountAddress, identifiers) {
-        const updatedIdentifiers = new Map(identifiers); // Create a copy of the identifiers
-
-        const newSafeId = `safe-${Date.now()}-${Math.random().toString(36).slice(2, 5)}`; // Generate a new safe ID
-        updatedIdentifiers.set(newSafeId, newSafeId); // Add the new safe ID to the identifiers
-
-        // Generate action parameters based on the action
-        const actionParams = {
-            // Populate with necessary parameters for the action
-            safeId: newSafeId,
-            // Add other parameters as needed
-        };
-
-        return [actionParams, updatedIdentifiers];
     }
 }
