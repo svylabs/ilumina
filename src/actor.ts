@@ -71,10 +71,20 @@ export class Actor extends Agent {
         let currentSnapshot;
         let newSnapshot;
         try {
+            // Take the current snapshot
             currentSnapshot = await context.snapshotProvider.snapshot();
+
+            // Generate action parameters using the action
+            actionParams = await action.generateActionParams(context, this, currentSnapshot);
+
+            // Execute the action with the generated parameters
             this.log("Executing action", action);
-            actionParams = await action.execute(context, this, currentSnapshot);
+            await action.execute(context, this, currentSnapshot, actionParams);
+
+            // Take the new snapshot
             newSnapshot = await context.snapshotProvider.snapshot();
+
+            // Validate the action
             this.log("Validating action", action, actionParams);
             await action.validate(context, this, currentSnapshot, newSnapshot, actionParams);
         } catch (ex) {
