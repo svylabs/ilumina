@@ -17,9 +17,27 @@ export abstract class Action {
     }
 
     // Abstract method to generate action parameters
-    abstract generateActionParams(context: RunContext, actor: Actor, currentSnapshot: any): Promise<any>;
+    abstract generateActionParams(
+        context: RunContext,
+        actor: Actor,
+        currentSnapshot: any,
+        identifiers: Record<string, any>
+    ): Promise<[any, Record<string, any>?]>;
 
-    abstract execute(context: RunContext, actor: Actor, currentSnapshot: any, actionParams: any): Promise<any>;
+    // Abstract method to execute the action
+    abstract execute(
+        context: RunContext,
+        actor: Actor,
+        currentSnapshot: any,
+        actionParams: any
+    ): Promise<Record<string, any> | void>;
 
-    abstract validate(context: RunContext, actor: Actor, previousSnapshot: any, newSnapshot: any, actionParams: any): Promise<boolean>;
+    // Abstract method to validate the action
+    abstract validate(
+        context: RunContext,
+        actor: Actor,
+        previousSnapshot: any,
+        newSnapshot: any,
+        actionParams: any
+    ): Promise<boolean>;
 }

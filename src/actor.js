@@ -56,6 +56,7 @@ export class Actor extends Agent {
 
     async executeAction(context, action) {
         let actionParams;
+        let updatedIdentifiers;
         let currentSnapshot;
         let newSnapshot;
         try {
@@ -63,11 +64,25 @@ export class Actor extends Agent {
             currentSnapshot = await context.snapshotProvider.snapshot(this.identifiers);
 
             // Generate action parameters using the action
-            actionParams = await action.generateActionParams(context, this, currentSnapshot);
+            [actionParams, updatedIdentifiers] = await action.generateActionParams(
+                context,
+                this,
+                currentSnapshot,
+                this.identifiers
+            );
 
             // Execute the action
             this.log("Executing action", action);
-            await action.execute(context, this, currentSnapshot, actionParams);
+            const actionUpdatedIdentifiers = await action.execute(context, this, currentSnapshot, actionParams);
+
+            // Update identifiers if returned by the action
+            if (updatedIdentifiers || actionUpdatedIdentifiers) {
+                this.identifiers = {
+                    ...this.identifiers,
+                    ...updatedIdentifiers,
+                    ...actionUpdatedIdentifiers,
+                };
+            }
 
             // Take the new snapshot
             newSnapshot = await context.snapshotProvider.snapshot(this.identifiers);

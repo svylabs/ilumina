@@ -14,12 +14,21 @@ export class Actor extends Agent {
     readonly account: Account;
     private iteration: number = 0;
     private actions: { action: Action; probability?: number }[];
+    private identifiers: Record<string, any> = {};
 
-    constructor(actorType: string, account: Account, contracts: any[], actions: { action: Action; probability?: number }[]) {
+    constructor(
+        actorType: string,
+        account: Account,
+        contracts: any[],
+        actions: { action: Action; probability?: number }[],
+        identifiers: Record<string, string> = {}
+    ) {
         super();
         this.actorType = actorType;
         this.account = account;
         this.actions = actions;
+        this.identifiers = identifiers;
+        this.identifiers["accountAddress"] = account.address; // Set initial identifier
     }
 
     async step(context: RunContext) {
@@ -72,11 +81,16 @@ export class Actor extends Agent {
             currentSnapshot = await context.snapshotProvider.snapshot();
 
             // Generate action parameters using the action
-            actionParams = await action.generateActionParams(context, this, currentSnapshot);
+            actionParams = await action.generateActionParams(context, this, currentSnapshot, this.identifiers);
 
             // Execute the action with the generated parameters
             this.log("Executing action", action);
-            await action.execute(context, this, currentSnapshot, actionParams);
+            const updatedIdentifiers = await action.execute(context, this, currentSnapshot, actionParams);
+
+            // Update identifiers if returned by the action
+            if (updatedIdentifiers) {
+                this.identifiers = { ...this.identifiers, ...updatedIdentifiers };
+            }
 
             // Take the new snapshot
             newSnapshot = await context.snapshotProvider.snapshot();

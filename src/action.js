@@ -13,8 +13,7 @@ export class Action {
         }));
     }
 
-    // Placeholder for generateActionParams
-    async generateActionParams(context, actor, currentSnapshot) {
+    async generateActionParams(context, actor, currentSnapshot, identifiers) {
         throw new Error("generateActionParams must be implemented in subclasses");
     }
 
