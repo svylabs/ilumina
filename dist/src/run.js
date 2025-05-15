@@ -19,7 +19,8 @@ export class Runner {
             let context = {
                 snapshotProvider: this.snapshotProvider,
                 prng: this.prng,
-                iter: i
+                iter: i,
+                allActors: this.actors
             };
             if (this.options["shuffleAgents"]) {
                 this.actors = this.actors.sort(() => this.prng.next() - 0.5);

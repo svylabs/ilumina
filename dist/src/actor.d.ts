@@ -15,10 +15,11 @@ export declare class Actor extends Agent {
     readonly account: Account;
     private iteration;
     private actions;
+    private identifiers;
     constructor(actorType: string, account: Account, contracts: any[], actions: {
         action: Action;
         probability?: number;
-    }[]);
+    }[], identifiers?: Record<string, string>);
     step(context: RunContext): Promise<void>;
     log(...args: any[]): void;
     executeStep(context: RunContext): Promise<void>;

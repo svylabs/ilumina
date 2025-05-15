@@ -12,6 +12,7 @@ export interface RunContext {
     readonly snapshotProvider: SnapshotProvider;
     readonly prng: PRNG;
     readonly iter: number;
+    readonly allActors: Actor[];
 }
 export declare class Runner {
     actors: Actor[];

@@ -4,11 +4,14 @@ export class Actor extends Agent {
     account;
     iteration = 0;
     actions;
-    constructor(actorType, account, contracts, actions) {
+    identifiers = {};
+    constructor(actorType, account, contracts, actions, identifiers = {}) {
         super();
         this.actorType = actorType;
         this.account = account;
         this.actions = actions;
+        this.identifiers = identifiers;
+        this.identifiers["accountAddress"] = account.address; // Set initial identifier
     }
     async step(context) {
         this.iteration = context.iter;
@@ -36,12 +39,12 @@ export class Actor extends Agent {
         for (let action of this.actions) {
             if (action.probability) {
                 if (context.prng.next() < action.probability / result[0]) {
-                    this.executeAction(context, action.action);
+                    await this.executeAction(context, action.action);
                 }
             }
             else {
                 if (context.prng.next() < 1 / result[1]) {
-                    this.executeAction(context, action.action);
+                    await this.executeAction(context, action.action);
                 }
             }
         }
@@ -51,10 +54,20 @@ export class Actor extends Agent {
         let currentSnapshot;
         let newSnapshot;
         try {
+            // Take the current snapshot
             currentSnapshot = await context.snapshotProvider.snapshot();
+            // Generate action parameters using the action
+            actionParams = await action.generateActionParams(context, this, currentSnapshot, this.identifiers);
+            // Execute the action with the generated parameters
             this.log("Executing action", action);
-            actionParams = await action.execute(context, this, currentSnapshot);
+            const updatedIdentifiers = await action.execute(context, this, currentSnapshot, actionParams);
+            // Update identifiers if returned by the action
+            if (updatedIdentifiers) {
+                this.identifiers = { ...this.identifiers, ...updatedIdentifiers };
+            }
+            // Take the new snapshot
             newSnapshot = await context.snapshotProvider.snapshot();
+            // Validate the action
             this.log("Validating action", action, actionParams);
             await action.validate(context, this, currentSnapshot, newSnapshot, actionParams);
         }

@@ -16,6 +16,7 @@ export interface RunContext {
     readonly snapshotProvider: SnapshotProvider;
     readonly prng: PRNG;
     readonly iter: number;
+    readonly allActors: Actor[];
 }
 
 export class Runner {
@@ -39,7 +40,8 @@ export class Runner {
             let context: RunContext = {
                 snapshotProvider: this.snapshotProvider,
                 prng: this.prng,
-                iter: i
+                iter: i,
+                allActors: this.actors
             }
             if (this.options["shuffleAgents"]) {
                 this.actors = this.actors.sort(() => this.prng.next() - 0.5);
