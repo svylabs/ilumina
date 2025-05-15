@@ -73,19 +73,18 @@ export class Actor extends Agent {
     }
 
     async executeAction(context: RunContext, action: Action) {
-        let actionParams;
+        let executionParams;
         let currentSnapshot;
         let newSnapshot;
+        let updatedIdentifiers;
         try {
-            // Take the current snapshot
             currentSnapshot = await context.snapshotProvider.snapshot();
-
-            // Generate action parameters using the action
-            actionParams = await action.generateActionParams(context, this, currentSnapshot, this.identifiers);
+            // Generate action parameters for the action
+            [executionParams, updatedIdentifiers] = await action.generateExecutionParams(context, this, currentSnapshot);
 
             // Execute the action with the generated parameters
-            this.log("Executing action", action);
-            const updatedIdentifiers = await action.execute(context, this, currentSnapshot, actionParams);
+            this.log("Executing action", action, " with ", executionParams);
+            await action.execute(context, this, currentSnapshot, executionParams);
 
             // Update identifiers if returned by the action
             if (updatedIdentifiers) {
@@ -96,10 +95,10 @@ export class Actor extends Agent {
             newSnapshot = await context.snapshotProvider.snapshot();
 
             // Validate the action
-            this.log("Validating action", action, actionParams);
-            await action.validate(context, this, currentSnapshot, newSnapshot, actionParams);
+            this.log("Validating action", action, executionParams);
+            await action.validate(context, this, currentSnapshot, newSnapshot, executionParams);
         } catch (ex) {
-            this.log(ex, action, currentSnapshot, actionParams, newSnapshot);
+            this.log(ex, action, currentSnapshot, executionParams, newSnapshot);
             throw ex;
         }
     }

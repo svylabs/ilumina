@@ -1,4 +1,4 @@
-import { RunContext } from './run.js';
+import { RunContext, Snapshot } from './run.js';
 import { Actor } from './actor.js';
 
 export abstract class Action {
@@ -17,18 +17,17 @@ export abstract class Action {
     }
 
     // Abstract method to generate action parameters
-    abstract generateActionParams(
+    abstract generateExecutionParams(
         context: RunContext,
         actor: Actor,
-        currentSnapshot: any,
-        identifiers: Record<string, any>
-    ): Promise<[any, Record<string, any>?]>;
+        currentSnapshot: Snapshot
+    ): Promise<[any, Record<string, any>]>;
 
     // Abstract method to execute the action
     abstract execute(
         context: RunContext,
         actor: Actor,
-        currentSnapshot: any,
+        currentSnapshot: Snapshot,
         actionParams: any
     ): Promise<Record<string, any> | void>;
 
@@ -36,8 +35,8 @@ export abstract class Action {
     abstract validate(
         context: RunContext,
         actor: Actor,
-        previousSnapshot: any,
-        newSnapshot: any,
+        previousSnapshot: Snapshot,
+        newSnapshot: Snapshot,
         actionParams: any
     ): Promise<boolean>;
 }

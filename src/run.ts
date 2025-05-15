@@ -7,8 +7,13 @@ export interface Web3RunnerOptions {
     readonly randomSeed?: string;
 }
 
+export interface Snapshot {
+    readonly contractSnapshot: Record<string, any>;
+    readonly actorSnapshot: Record<string, any>;
+}
+
 export interface SnapshotProvider {
-    snapshot(): Promise<any>;
+    snapshot(): Promise<Snapshot>;
 }
 
 

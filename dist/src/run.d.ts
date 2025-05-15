@@ -5,8 +5,12 @@ export interface Web3RunnerOptions {
     readonly shuffleAgents?: boolean;
     readonly randomSeed?: string;
 }
+export interface Snapshot {
+    readonly contractSnapshot: Record<string, any>;
+    readonly actorSnapshot: Record<string, any>;
+}
 export interface SnapshotProvider {
-    snapshot(): Promise<any>;
+    snapshot(): Promise<Snapshot>;
 }
 export interface RunContext {
     readonly snapshotProvider: SnapshotProvider;
