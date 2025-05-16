@@ -1,5 +1,5 @@
 export { Runner } from "./run.js";
-export type { SnapshotProvider, Web3RunnerOptions, RunContext  } from "./run.js";
+export type { SnapshotProvider, Web3RunnerOptions, RunContext, Snapshot } from "./run.js";
 export { Actor } from "./actor.js";
 export { Action } from "./action.js";
 export type { Account } from "./account.js";

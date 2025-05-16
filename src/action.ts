@@ -17,7 +17,7 @@ export abstract class Action {
     }
 
     // Abstract method to generate action parameters
-    abstract generateExecutionParams(
+    abstract initialize(
         context: RunContext,
         actor: Actor,
         currentSnapshot: Snapshot

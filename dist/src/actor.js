@@ -57,7 +57,7 @@ export class Actor extends Agent {
         try {
             currentSnapshot = await context.snapshotProvider.snapshot();
             // Generate action parameters for the action
-            [executionParams, updatedIdentifiers] = await action.generateExecutionParams(context, this, currentSnapshot);
+            [executionParams, updatedIdentifiers] = await action.initialize(context, this, currentSnapshot);
             // Execute the action with the generated parameters
             this.log("Executing action", action, " with ", executionParams);
             await action.execute(context, this, currentSnapshot, executionParams);
