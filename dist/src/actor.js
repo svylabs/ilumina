@@ -29,6 +29,9 @@ export class Actor extends Agent {
             args: JSON.stringify(args)
         }));
     }
+    getIdentifiers() {
+        return { ...this.identifiers };
+    }
     async executeStep(context) {
         this.iteration = context.iter;
         const result = this.actions.reduce((acc, action) => {

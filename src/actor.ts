@@ -21,7 +21,7 @@ export class Actor extends Agent {
         account: Account,
         contracts: any[],
         actions: { action: Action; probability?: number }[],
-        identifiers: Record<string, string> = {}
+        identifiers: Record<string, any> = {}
     ) {
         super();
         this.actorType = actorType;
@@ -47,6 +47,10 @@ export class Actor extends Agent {
             }),
             args: JSON.stringify(args)
         }));
+    }
+
+    getIdentifiers(): Record<string, any> {
+        return { ...this.identifiers };
     }
 
     async executeStep(context: RunContext) {

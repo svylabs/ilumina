@@ -19,9 +19,10 @@ export declare class Actor extends Agent {
     constructor(actorType: string, account: Account, contracts: any[], actions: {
         action: Action;
         probability?: number;
-    }[], identifiers?: Record<string, string>);
+    }[], identifiers?: Record<string, any>);
     step(context: RunContext): Promise<void>;
     log(...args: any[]): void;
+    getIdentifiers(): Record<string, any>;
     executeStep(context: RunContext): Promise<void>;
     executeAction(context: RunContext, action: Action): Promise<void>;
 }
