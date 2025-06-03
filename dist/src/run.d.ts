@@ -7,6 +7,7 @@ export interface Web3RunnerOptions {
 }
 export interface Snapshot {
     readonly contractSnapshot: Record<string, any>;
+    readonly accountSnapshot: Record<string, bigint>;
 }
 export interface SnapshotProvider {
     snapshot(): Promise<Snapshot>;
