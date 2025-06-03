@@ -5,7 +5,7 @@ export class Actor extends Agent {
     iteration = 0;
     actions;
     identifiers = {};
-    constructor(actorType, account, contracts, actions, identifiers = {}) {
+    constructor(actorType, account, actions, identifiers = {}) {
         super();
         this.actorType = actorType;
         this.account = account;

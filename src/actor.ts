@@ -19,7 +19,6 @@ export class Actor extends Agent {
     constructor(
         actorType: string,
         account: Account,
-        contracts: any[],
         actions: { action: Action; probability?: number }[],
         identifiers: Record<string, any> = {}
     ) {
