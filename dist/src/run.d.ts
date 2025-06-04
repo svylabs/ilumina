@@ -13,6 +13,7 @@ export interface SnapshotProvider {
     snapshot(): Promise<Snapshot>;
 }
 export interface RunContext {
+    readonly contracts: Record<string, any>;
     readonly snapshotProvider: SnapshotProvider;
     readonly prng: PRNG;
     readonly iter: number;
@@ -24,8 +25,9 @@ export declare class Runner {
     readonly iterations: number;
     readonly options: any;
     readonly prng: PRNG;
+    readonly contracts: Record<string, any>;
     readonly snapshotProvider: SnapshotProvider;
-    constructor(actors: Actor[], snapshotProvider: SnapshotProvider, options: Web3RunnerOptions);
+    constructor(contracts: Record<string, any>, actors: Actor[], snapshotProvider: SnapshotProvider, options: Web3RunnerOptions);
     run(): Promise<void>;
 }
 //# sourceMappingURL=run.d.ts.map
