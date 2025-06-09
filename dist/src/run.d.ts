@@ -19,6 +19,12 @@ export interface RunContext {
     readonly iter: number;
     readonly allActors: Actor[];
 }
+export interface Hooks {
+    beforeIteration?(context: RunContext): Promise<void>;
+    afterIteration?(context: RunContext): Promise<void>;
+    beforeActorStep?(context: RunContext, actor: Actor): Promise<void>;
+    afterActorStep?(context: RunContext, actor: Actor): Promise<void>;
+}
 export declare class Runner {
     actors: Actor[];
     readonly randomSeed: string;
@@ -27,7 +33,8 @@ export declare class Runner {
     readonly prng: PRNG;
     readonly contracts: Record<string, any>;
     readonly snapshotProvider: SnapshotProvider;
-    constructor(contracts: Record<string, any>, actors: Actor[], snapshotProvider: SnapshotProvider, options: Web3RunnerOptions);
+    readonly hooks: Hooks;
+    constructor(contracts: Record<string, any>, actors: Actor[], snapshotProvider: SnapshotProvider, options: Web3RunnerOptions, hooks?: Hooks);
     run(): Promise<void>;
 }
 //# sourceMappingURL=run.d.ts.map

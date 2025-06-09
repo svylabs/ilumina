@@ -1,6 +1,10 @@
 import { RunContext, Snapshot } from './run.js';
 import { Actor } from './actor.js';
 
+export interface TxReceipt {
+    txReceipt: any; // Transaction receipt
+}
+
 export abstract class Action {
     readonly name: string;
     constructor(name: string) {
@@ -21,7 +25,7 @@ export abstract class Action {
         context: RunContext,
         actor: Actor,
         currentSnapshot: Snapshot
-    ): Promise<[any, Record<string, any>]>;
+    ): Promise<[boolean, any, Record<string, any>]>;
 
     // Abstract method to execute the action
     abstract execute(
@@ -29,7 +33,7 @@ export abstract class Action {
         actor: Actor,
         currentSnapshot: Snapshot,
         actionParams: any
-    ): Promise<Record<string, any> | void>;
+    ): Promise<TxReceipt>;
 
     // Abstract method to validate the action
     abstract validate(
@@ -37,6 +41,7 @@ export abstract class Action {
         actor: Actor,
         previousSnapshot: Snapshot,
         newSnapshot: Snapshot,
-        actionParams: any
+        actionParams: any,
+        txReceipt: TxReceipt
     ): Promise<boolean>;
 }

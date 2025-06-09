@@ -25,6 +25,13 @@ export interface RunContext {
     readonly allActors: Actor[];
 }
 
+export interface Hooks {
+    beforeIteration?(context: RunContext): Promise<void>;
+    afterIteration?(context: RunContext): Promise<void>;
+    beforeActorStep?(context: RunContext, actor: Actor): Promise<void>;
+    afterActorStep?(context: RunContext, actor: Actor): Promise<void>;
+}
+
 export class Runner {
     actors: Actor[];
     readonly randomSeed: string;
@@ -33,7 +40,8 @@ export class Runner {
     readonly prng: PRNG;
     readonly contracts: Record<string, any>;
     readonly snapshotProvider: SnapshotProvider;
-    constructor(contracts: Record<string, any>, actors: Actor[], snapshotProvider: SnapshotProvider, options: Web3RunnerOptions) {
+    readonly hooks: Hooks;
+    constructor(contracts: Record<string, any>, actors: Actor[], snapshotProvider: SnapshotProvider, options: Web3RunnerOptions, hooks?: Hooks) {
         this.actors = actors;
         this.contracts = contracts;
         this.iterations = options.iterations || 100;
@@ -41,6 +49,7 @@ export class Runner {
         this.prng = new PRNG(options.randomSeed || "0");
         this.snapshotProvider = snapshotProvider;
         this.options = options;
+        this.hooks = hooks || {};
     }
 
     async run() {
@@ -52,11 +61,24 @@ export class Runner {
                 iter: i,
                 allActors: this.actors
             }
+            if (this.hooks?.beforeIteration) {
+                this.hooks.beforeIteration(context);
+            }
+            
             if (this.options["shuffleAgents"]) {
                 this.actors = this.actors.sort(() => this.prng.next() - 0.5);
             }
             for (let agent of this.actors) {
+                if (this.hooks?.beforeActorStep) {
+                    await this.hooks.beforeActorStep(context, agent);
+                }
                 await agent.step(context);
+                if (this.hooks?.afterActorStep) {
+                    await this.hooks.afterActorStep(context, agent);
+                }
+            }
+            if (this.hooks?.afterIteration) {
+                this.hooks.afterIteration(context);
             }
         }
     }
