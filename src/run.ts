@@ -62,7 +62,7 @@ export class Runner {
                 allActors: this.actors
             }
             if (this.hooks?.beforeIteration) {
-                this.hooks.beforeIteration(context);
+                await this.hooks.beforeIteration(context);
             }
             
             if (this.options["shuffleAgents"]) {
@@ -78,7 +78,7 @@ export class Runner {
                 }
             }
             if (this.hooks?.afterIteration) {
-                this.hooks.afterIteration(context);
+                await this.hooks.afterIteration(context);
             }
         }
     }
