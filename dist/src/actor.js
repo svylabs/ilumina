@@ -4,11 +4,14 @@ export class Actor extends Agent {
     account;
     iteration = 0;
     actions;
-    constructor(actorType, account, contracts, actions) {
+    identifiers = {};
+    constructor(actorType, account, actions, identifiers = {}) {
         super();
         this.actorType = actorType;
         this.account = account;
         this.actions = actions;
+        this.identifiers = identifiers;
+        this.identifiers["accountAddress"] = account.address; // Set initial identifier
     }
     async step(context) {
         this.iteration = context.iter;
@@ -26,6 +29,9 @@ export class Actor extends Agent {
             args: JSON.stringify(args)
         }));
     }
+    getIdentifiers() {
+        return { ...this.identifiers };
+    }
     async executeStep(context) {
         this.iteration = context.iter;
         const result = this.actions.reduce((acc, action) => {
@@ -36,30 +42,45 @@ export class Actor extends Agent {
         for (let action of this.actions) {
             if (action.probability) {
                 if (context.prng.next() < action.probability / result[0]) {
-                    this.executeAction(context, action.action);
+                    await this.executeAction(context, action.action);
                 }
             }
             else {
                 if (context.prng.next() < 1 / result[1]) {
-                    this.executeAction(context, action.action);
+                    await this.executeAction(context, action.action);
                 }
             }
         }
     }
     async executeAction(context, action) {
-        let actionParams;
+        let executionParams;
         let currentSnapshot;
         let newSnapshot;
+        let updatedIdentifiers;
+        let canExecute = true;
         try {
             currentSnapshot = await context.snapshotProvider.snapshot();
-            this.log("Executing action", action);
-            actionParams = await action.execute(context, this, currentSnapshot);
+            // Generate action parameters for the action
+            [canExecute, executionParams, updatedIdentifiers] = await action._initialize(context, this, currentSnapshot);
+            // Execute the action with the generated parameters
+            if (!canExecute) {
+                this.log("Action cannot be executed", action, executionParams);
+                return;
+            }
+            this.log("Executing action", action, " with ", executionParams);
+            const txReceipt = await action._execute(context, this, currentSnapshot, executionParams);
+            // Update identifiers if returned by the action
+            if (updatedIdentifiers) {
+                this.identifiers = { ...this.identifiers, ...updatedIdentifiers };
+            }
+            // Take the new snapshot
             newSnapshot = await context.snapshotProvider.snapshot();
-            this.log("Validating action", action, actionParams);
-            await action.validate(context, this, currentSnapshot, newSnapshot, actionParams);
+            // Validate the action
+            this.log("Validating action", action, executionParams);
+            await action._validate(context, this, currentSnapshot, newSnapshot, executionParams, txReceipt);
         }
         catch (ex) {
-            this.log(ex, action, currentSnapshot, actionParams, newSnapshot);
+            this.log(ex, action, currentSnapshot, executionParams, newSnapshot);
             throw ex;
         }
     }

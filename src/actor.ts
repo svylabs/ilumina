@@ -3,26 +3,31 @@ import { RunContext } from "./run.js";
 import { Account } from "./account.js";
 import { Action } from "./action.js";
 
-  
-
 export interface ActorConfig {
     readonly name: string;
     readonly account: Account;
     readonly actions: { action: Action; probability: number }[];
 }
 
-
-
 export class Actor extends Agent {
     readonly actorType: string;
     readonly account: Account;
-    private iteration: number= 0;
+    private iteration: number = 0;
     private actions: { action: Action; probability?: number }[];
-    constructor(actorType: string, account: Account, contracts: any[], actions: { action: Action; probability?: number }[]) {
+    private identifiers: Record<string, any> = {};
+
+    constructor(
+        actorType: string,
+        account: Account,
+        actions: { action: Action; probability?: number }[],
+        identifiers: Record<string, any> = {}
+    ) {
         super();
         this.actorType = actorType;
         this.account = account;
         this.actions = actions;
+        this.identifiers = identifiers;
+        this.identifiers["accountAddress"] = account.address; // Set initial identifier
     }
 
     async step(context: RunContext) {
@@ -43,6 +48,10 @@ export class Actor extends Agent {
         }));
     }
 
+    getIdentifiers(): Record<string, any> {
+        return { ...this.identifiers };
+    }
+
     async executeStep(context: RunContext) {
         this.iteration = context.iter;
         const result = this.actions.reduce(
@@ -50,35 +59,54 @@ export class Actor extends Agent {
                 acc[0] += action.probability || 0; // Sum of probabilities
                 acc[1] += action.probability ? 0 : 1; // Count of actions without probability
                 return acc;
-              }
-              , [0, 0]
+            },
+            [0, 0]
         );
         for (let action of this.actions) {
             if (action.probability) {
                 if (context.prng.next() < action.probability / result[0]) {
-                    this.executeAction(context, action.action);
+                    await this.executeAction(context, action.action);
                 }
             } else {
                 if (context.prng.next() < 1 / result[1]) {
-                    this.executeAction(context, action.action);
+                    await this.executeAction(context, action.action);
                 }
             }
         }
     }
 
     async executeAction(context: RunContext, action: Action) {
-        let actionParams;
+        let executionParams;
         let currentSnapshot;
         let newSnapshot;
+        let updatedIdentifiers;
+        let canExecute = true;
         try {
             currentSnapshot = await context.snapshotProvider.snapshot();
-            this.log("Executing action", action);
-            actionParams = await action.execute(context, this, currentSnapshot);
+            // Generate action parameters for the action
+            [canExecute, executionParams, updatedIdentifiers] = await action._initialize(context, this, currentSnapshot);
+
+            // Execute the action with the generated parameters
+            if (!canExecute) {
+                this.log("Action cannot be executed", action, executionParams);
+                return;
+            }
+            this.log("Executing action", action, " with ", executionParams);
+            const txReceipt = await action._execute(context, this, currentSnapshot, executionParams);
+
+            // Update identifiers if returned by the action
+            if (updatedIdentifiers) {
+                this.identifiers = { ...this.identifiers, ...updatedIdentifiers };
+            }
+
+            // Take the new snapshot
             newSnapshot = await context.snapshotProvider.snapshot();
-            this.log("Validating action", action, actionParams);
-            await action.validate(context, this, currentSnapshot, newSnapshot, actionParams);
+
+            // Validate the action
+            this.log("Validating action", action, executionParams);
+            await action._validate(context, this, currentSnapshot, newSnapshot, executionParams, txReceipt);
         } catch (ex) {
-            this.log(ex, action, currentSnapshot, actionParams, newSnapshot);
+            this.log(ex, action, currentSnapshot, executionParams, newSnapshot);
             throw ex;
         }
     }
